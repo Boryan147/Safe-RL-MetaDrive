@@ -4,9 +4,9 @@ import torch.nn as nn
 import torch.optim as optim
 import random
 import numpy as np
-from collections import deque
+from collections import deque, namedtuple
 
-# --- 1. The Neural Network ---
+# --- The Neural Network ---
 class DQN(nn.Module):
     def __init__(self, state_dim, action_dim):
         super(DQN, self).__init__()
@@ -17,19 +17,22 @@ class DQN(nn.Module):
         # TODO: Implement the forward pass
         pass
 
-# --- 2. The Experience Replay Buffer ---
+# --- The Experience Replay Buffer ---
+# a single transition in environment 
+Transition = namedtuple('Transition', ('state', 'action', 'next_state', 'reward'))
+
 class ReplayBuffer:
     def __init__(self, capacity):
-        self.buffer = deque(maxlen=capacity)
+        self.memory = deque(maxlen=capacity)
 
-    def push(self, state, action, reward, next_state, done):
-        self.buffer.append((state, action, reward, next_state, done))
+    def push(self, *args):
+        self.memory.append(Transition(*args))
 
     def sample(self, batch_size):
         # TODO: Return a random batch of transitions as Tensors
         pass
 
-# --- 3. The Algorithm Logic ---
+# --- The Algorithm Logic ---
 class DQNAgent:
     def __init__(self, state_dim, action_dim):
         self.policy_net = DQN(state_dim, action_dim)
@@ -57,7 +60,7 @@ class DQNAgent:
         # 4. Compute Loss (MSE or Huber) and perform Backprop
         pass
 
-# --- 4. Main Training Loop ---
+# --- Main Training Loop ---
 env = gym.make("CartPole-v1")
 agent = DQNAgent(env.observation_space.shape[0], env.action_space.n)
 
